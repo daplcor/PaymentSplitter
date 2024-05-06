@@ -31,7 +31,7 @@ const SafeTransferTransactions = ({ transactions, copiedTransactions, setCopiedT
               >
                 {copiedTransactions.includes(index)
                   ? "Copied!"
-                  : `Payee: ${payee.slice(0, 26)}...`}
+                  : `Payee: ${payee.slice(0, 14)}...`}
               </button>
             </div>
           );

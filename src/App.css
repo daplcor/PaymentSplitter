@@ -1,7 +1,8 @@
 #root {
   margin: 0 auto;
   text-align: center;
-  background-color: #f9f9f9;
+  /* background-color: #f9f9f9; */
+  background-image: linear-gradient(61deg, #432b95, #4e51a7, #5575b8, #5799ca)
 }
 
 .truncate {

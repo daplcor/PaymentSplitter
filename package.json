@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@kadena/client": "^1.11.0",
+    "@vercel/analytics": "^1.2.2",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.19",
     "prop-types": "^15.8.1",

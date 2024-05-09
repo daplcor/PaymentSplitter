@@ -3,32 +3,36 @@ import PropTypes from 'prop-types';
 const AmountInput = ({ splitOption, amount, setAmount, errors, fungible, setFungible }) => {
   return (
     <>
-      <div className="flex items-start space-x-4">
-        <div className="flex flex-col flex-1">
-          <label htmlFor="amount" className="mb-1">
-            {splitOption === "equal" ? "Enter Total Amount:" : "Enter Amounts (one per line, matching payees):"}
-          </label>
-          {splitOption === "equal" ? (
-            <input
-              type="number"
-              id="amount"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className={`w-full h-12 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
-                errors.amount ? "border-red-500" : "border-gray-300 focus:ring-blue-500"
-              }`}
-            />
-          ) : (
-            <textarea
-              id="amount"
-              rows="5"
-              cols="30"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="w-full h-24 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            ></textarea>
-          )}
-        </div>
+     <div className="flex items-start space-x-4">
+      <div className="flex flex-col flex-1">
+        <label htmlFor="amount" className="mb-1">
+          {splitOption === "equal"
+            ? "Enter Amounts:"
+            : splitOption === "single"
+            ? "Enter Amount:"
+            : "Enter Amounts (one per line, matching payees):"}
+        </label>
+        {splitOption === "equal" || splitOption === "single" ? (
+          <input
+            type="number"
+            id="amount"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className={`w-full h-12 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+              errors.amount ? "border-red-500" : "border-gray-300 focus:ring-blue-500"
+            }`}
+          />
+        ) : (
+          <textarea
+            id="amount"
+            rows="5"
+            cols="30"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="w-full h-24 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          ></textarea>
+        )}
+      </div>
 
         <div className="flex flex-col flex-1">
           <label htmlFor="fungible" className="mb-1">Token Type:</label>

@@ -102,6 +102,7 @@ const PaymentForm = ({ onSubmit, onSafeTransferSubmit }) => {
       network,
       splitOption,
       amount,
+      selectedKeys,
       fungible
     };
     onSubmit(formData);

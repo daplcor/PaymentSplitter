@@ -23,15 +23,16 @@ export const generateTransaction = async (formData) => {
   let splitAmount;
   if (splitOption === "equal") {
     splitAmount = parseFloat(amount) / numPayees;
+  } else if (splitOption === "single") {
+    splitAmount = parseFloat(amount);
   } else {
-    const amountArray = amount.split("\\n");
+    const amountArray = amount.split("\n");
     splitAmount = amountArray.map(parseFloat);
   }
 
   const senderPubKeys = sender.startsWith("k:")
     ? [sender.slice(2)]
     : selectedKeys || [];
-
   let code = "";
   for (let i = 0; i < payeeArray.length; i++) {
     const payee = payeeArray[i];

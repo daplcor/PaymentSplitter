@@ -8,7 +8,7 @@ const UnsignedTransaction = ({
   if (!transaction) {
     return null;
   }
-
+console.log("transaction", transaction.hash)
   const copyTransaction = () => {
     // This will convert the transaction object into a string with proper formatting
     const transactionString = JSON.stringify(transaction, null, 2); // Pretty prints the object

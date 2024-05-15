@@ -17,9 +17,10 @@ const SafeTransferTransactions = ({ transactions, copiedTransactions, setCopiedT
   // Create the transaction explorer link, copy it to the clipboard, and show user feedback
   const createLink = (transaction, index) => {
     const t = transaction.hash;
-    const apiUrl = transaction.cmd.networkId === "testnet04"
-      ? "https://explorer.chainweb.com/testnet"
-      : "https://explorer.chainweb.com/mainnet";
+    const cmdObj = JSON.parse(transaction.cmd);
+          const apiUrl = cmdObj.networkId === "testnet04"
+        ? "https://explorer.chainweb.com/testnet"
+        : "https://explorer.chainweb.com/mainnet";
     const link = `${apiUrl}/tx/${t}`;
     navigator.clipboard.writeText(link);
 

@@ -24,7 +24,8 @@ const UnsignedTransaction = ({
   const createLink = () => {
     if (transaction) {
       const t = transaction.hash;
-      const apiUrl = transaction.cmd.networkId === "testnet04"
+      const cmdObj = JSON.parse(transaction.cmd);
+          const apiUrl = cmdObj.networkId === "testnet04"
         ? "https://explorer.chainweb.com/testnet"
         : "https://explorer.chainweb.com/mainnet";
       const link = `${apiUrl}/tx/${t}`;

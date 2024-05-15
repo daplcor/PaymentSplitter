@@ -21,6 +21,7 @@ export const generateTransaction = async (formData) => {
   const payeeArray = payees.split("\n").filter((payee) => payee.trim() !== "");
   const numPayees = payeeArray.length;
   let splitAmount;
+
   if (splitOption === "equal") {
     splitAmount = parseFloat(amount) / numPayees;
   } else if (splitOption === "single") {
@@ -29,6 +30,10 @@ export const generateTransaction = async (formData) => {
     const amountArray = amount.split("\n");
     splitAmount = amountArray.map(parseFloat);
   }
+
+  const roundToPrecision = (num, precision) => {
+    return parseFloat(num.toFixed(precision));
+  };
 
   const senderPubKeys = sender.startsWith("k:")
     ? [sender.slice(2)]
@@ -50,7 +55,8 @@ export const generateTransaction = async (formData) => {
 
   // Add transfer amounts
   for (let i = 0; i < payeeArray.length; i++) {
-    const transferAmount = splitAmount[i] || splitAmount;
+    let transferAmount = Array.isArray(splitAmount) ? splitAmount[i] : splitAmount;
+    transferAmount = roundToPrecision(transferAmount, 12);
     pactBuilder.addData(`amount${i}`, transferAmount.toString());
   }
 
@@ -60,8 +66,10 @@ export const generateTransaction = async (formData) => {
     .addSigner(senderPubKeys, (signFor) => [
       signFor(`${fungible}.GAS`),
       ...payeeArray.map((payee, index) => {
+        let transferAmount = Array.isArray(splitAmount) ? splitAmount[index] : splitAmount;
+        transferAmount = roundToPrecision(transferAmount, 12);
         return signFor(`${fungible}.TRANSFER`, sender, payee, {
-          decimal: (splitAmount[index] || splitAmount).toString(),
+          decimal: transferAmount.toString(),
         });
       }),
     ])
@@ -89,10 +97,9 @@ export const generateTransaction = async (formData) => {
     throw new Error("command failure");
   }
 
-  // console.log("preflight successful");
-
   return { ...transaction, sigs };
 };
+
 
 export const generateSafeTransferTransactions = async (formData) => {
   const {
@@ -130,27 +137,30 @@ export const generateSafeTransferTransactions = async (formData) => {
   const transactions = await Promise.all(
     payeeArray.map(async (payee, index) => {
       const receiverPubKey = payee.startsWith("k:") ? payee.slice(2) : "";
-      let transferAmount = splitAmount[index] || splitAmount;
-      transferAmount += 0.000000000001;
+      let transferAmount = Array.isArray(splitAmount) ? splitAmount[index] : splitAmount;
+
+      // Round transferAmount to 12 decimal places and avoid scientific notation
+      transferAmount = transferAmount.toFixed(12);
+      const smallTransferAmount = (0.000000000001).toFixed(12);
 
       const transaction = await Pact.builder
         .execution(
           `(${fungible}.transfer-create "${sender}" "${payee}" (read-keyset 'payee) (read-decimal 'amount))
-          (${fungible}.transfer "${payee}" "${sender}" 0.000000000001)`
+          (${fungible}.transfer "${payee}" "${sender}" ${smallTransferAmount})`
         )
         .addSigner(senderPubKeys, (signFor) => [
           signFor(`${fungible}.GAS`),
           signFor(`${fungible}.TRANSFER`, sender, payee, {
-            decimal: transferAmount.toString(),
+            decimal: transferAmount,
           }),
         ])
         .addSigner([receiverPubKey], (signFor) => [
           signFor(`${fungible}.TRANSFER`, payee, sender, {
-            decimal: "0.000000000001",
+            decimal: smallTransferAmount,
           }),
         ])
         .addKeyset("payee", "keys-all", receiverPubKey)
-        .addData("amount", transferAmount)
+        .addData("amount", parseFloat(transferAmount))
         .setMeta({
           chainId: chain,
           gasLimit: 2000,

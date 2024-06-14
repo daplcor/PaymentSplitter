@@ -35,9 +35,10 @@ export const generateTransaction = async (formData) => {
     return parseFloat(num.toFixed(precision));
   };
 
-  const senderPubKeys = sender.startsWith("k:")
-    ? [sender.slice(2)]
-    : selectedKeys || [];
+  const senderPubKeys = selectedKeys || [];
+  // const senderPubKeys = sender.startsWith("k:")
+  //   ? [sender.slice(2)]
+  //   : selectedKeys || [];
   let code = "";
   for (let i = 0; i < payeeArray.length; i++) {
     const payee = payeeArray[i];
@@ -61,7 +62,7 @@ export const generateTransaction = async (formData) => {
   }
 
   // Calculate the gas limit based on the number of payees
-  const gasLimit = Math.min(700 * numPayees, 150000);
+  const gasLimit = Math.min(800 * numPayees, 150000);
   const transaction = await pactBuilder
     .addSigner(senderPubKeys, (signFor) => [
       signFor(`${fungible}.GAS`),
@@ -82,7 +83,6 @@ export const generateTransaction = async (formData) => {
     })
     .setNetworkId(network)
     .createTransaction();
-
   const sigs = {
     ...senderPubKeys.reduce((acc, key) => {
       acc[key] = null;

@@ -19,10 +19,8 @@ const PaymentForm = ({ onSubmit, onSafeTransferSubmit }) => {
   const [network, setNetwork] = useState("testnet04");
   const [senderDetails, setSenderDetails] = useState(null);
   const [selectedKeys, setSelectedKeys] = useState([]);
-  // const [receiverKeys, setReceiverKeys] = useState({});
   const [splitOption, setSplitOption] = useState("equal");
   const [fungible, setFungible] = useState('coin');
-  // const payeeArray = payees.split("\n");
   const [amount, setAmount] = useState("");
   const [balances, setBalances] = useState({});
   const [errors, setErrors] = useState({

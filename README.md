@@ -1,7 +1,8 @@
 # Kadena Payment Splitter
 
 This repository is meant to assist in crafting signable transactions for the Kadena Blockchain.  Please feel free to 
-contribute or register an issue if you want to see any other features.
+contribute or register an issue if you want to see any other features.  For integrated wallet signing, we have other 
+repositories meant for that use case.
 
 ## Installation
 

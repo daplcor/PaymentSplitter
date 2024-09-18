@@ -62,7 +62,7 @@ export const generateTransaction = async (formData) => {
   }
 
   // Calculate the gas limit based on the number of payees
-  const gasLimit = Math.min(800 * numPayees, 150000);
+  const gasLimit = Math.min(900 * numPayees, 150000);
   const transaction = await pactBuilder
     .addSigner(senderPubKeys, (signFor) => [
       signFor(`${fungible}.GAS`),
